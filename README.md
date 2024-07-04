@@ -26,6 +26,19 @@
 
 # LAVIS - A Library for Language-Vision Intelligence
 
+## Develog Log: 🔧
+
+
+
+  * 2024/07/03 Fix datatype in lavis/models/blip2_models/blip2_qformer.py:160~163
+  ```
+  #[o] Fix datatype error
+  #//image_ids = samples["image_id"].view(-1,1)
+  # > image_ids = torch.tensor([int(x.split('_')[-1]) for x in samples["image_id"]]).view(-1,1).to(image.device)
+  ```
+
+
+
 ## What's New: 🎉 
   * [Model Release] November 2023, released implementation of **X-InstructBLIP** <br>
   [Paper](https://arxiv.org/pdf/2311.18799.pdf), [Project Page](https://github.com/salesforce/LAVIS/tree/main/projects/xinstructblip), [Website](https://artemisp.github.io/X-InstructBLIP-page/), [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/salesforce/LAVIS/blob/main/projects/xinstructblip/demo/run_demo.ipynb)
