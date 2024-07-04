@@ -29,14 +29,24 @@
 ## Develog Log: 🔧
 
 
+  * 2024/07/03-2
+  Previous BLIP-2 cannot resume the training in lavis/runners/runner_base.py:595~599
+  ```python
+  state_dict = model_no_ddp.state_dict()
+  # TODO: delete parameters only if they are not from momentum models
+  #for k in list(state_dict.keys()):
+  #    if k in param_grad_dic.keys() and not param_grad_dic[k]:
+  #        # delete parameters that do not require gradient
+  #        del state_dict[k]
 
-  * 2024/07/03 Fix datatype in lavis/models/blip2_models/blip2_qformer.py:160~163
   ```
+  * 2024/07/03-1 
+  Fix datatype in lavis/models/blip2_models/blip2_qformer.py:160~163
+  ```python
   #[o] Fix datatype error
   #//image_ids = samples["image_id"].view(-1,1)
   # > image_ids = torch.tensor([int(x.split('_')[-1]) for x in samples["image_id"]]).view(-1,1).to(image.device)
   ```
-
 
 
 ## What's New: 🎉 
