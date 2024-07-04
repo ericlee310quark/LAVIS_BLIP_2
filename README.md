@@ -27,7 +27,9 @@
 # LAVIS - A Library for Language-Vision Intelligence
 
 ## Develog Log: 🔧
-
+  * 2024/07/04-1
+  In BLIP-2, ViT interpolation function in 'load_from_pretrained()' is missing:
+  lavis/models/blip2_models/blip2.py:97~133 
 
   * 2024/07/03-2
   Previous BLIP-2 cannot resume the training in lavis/runners/runner_base.py:595~599

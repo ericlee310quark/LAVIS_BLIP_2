@@ -94,10 +94,43 @@ class Blip2Base(BaseModel):
             raise RuntimeError("checkpoint url or path is invalid")
 
         state_dict = checkpoint["model"]
+        #! Interpolate_pos_embed - Start
+        if "vit_model" in checkpoint["config"]["model"].keys():
+            if(checkpoint["config"]["model"]["vit_model"]=="clip_L"):
+                assert 0, "need to change the \'interpolate_pos_embed\' of  clip_vit"
+            else:
+                
+                state_dict["visual_encoder.pos_embed"] = interpolate_pos_embed_v2(
+                state_dict["visual_encoder.pos_embed"], self.visual_encoder
+                )
+                if "visual_encoder_m.pos_embed" in self.state_dict().keys():
+                    state_dict["visual_encoder_m.pos_embed"] = interpolate_pos_embed_v2(
+                        state_dict["visual_encoder_m.pos_embed"], self.visual_encoder_m
+                    )
 
+                for key in self.state_dict().keys():
+                    if key in state_dict.keys():
+                        if state_dict[key].shape != self.state_dict()[key].shape:
+                            del state_dict[key]
+        else:
+            print(self.visual_encoder)
+            state_dict["visual_encoder.pos_embed"] = interpolate_pos_embed_v2(
+            state_dict["visual_encoder.pos_embed"], self.visual_encoder
+            )
+            if "visual_encoder_m.pos_embed" in self.state_dict().keys():
+                state_dict["visual_encoder_m.pos_embed"] = interpolate_pos_embed_v2(
+                    state_dict["visual_encoder_m.pos_embed"], self.visual_encoder_m
+                )
+
+            for key in self.state_dict().keys():
+                if key in state_dict.keys():
+                    if state_dict[key].shape != self.state_dict()[key].shape:
+                        del state_dict[key]
+            
+        #! Interpolate_pos_embed - End
         msg = self.load_state_dict(state_dict, strict=False)
 
-        # logging.info("Missing keys {}".format(msg.missing_keys))
+        logging.info("Missing keys {}".format(msg.missing_keys))
         logging.info("load checkpoint from %s" % url_or_filename)
 
         return msg
